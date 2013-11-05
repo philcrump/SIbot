@@ -12,15 +12,6 @@ var bot = new irc.Client(config.server, config.botName, {
         channels: config.channels
 });
 
-stream.on('tweet', function (tweet) {
-        if(typeof tweet.retweeted_status == 'undefined'
-        && (tweet.text.indexOf("RT") == -1)
-        && (tweet.text.indexOf("MT") == -1) ) { // If not retweeted
-                console.log(tweet.user.screen_name+': '+tweet.text.replace(/&amp;/g,'&'));
-                bot.say('#highaltitude', "@"+tweet.user.screen_name+': '+tweet.text.replace(/&amp;/g,'&'));
-        }
-});
-
 client.addListener('message', function (from, to, message) {
     if(message.search("/([0-9]+)\s?f[e]{0,2}t\s/") != -1) { // ft/feet
         console.log("Detected feet at "+message.search("/([0-9]+)\s?f[e]{0,2}t/");
