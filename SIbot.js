@@ -14,7 +14,7 @@ var bot = new irc.Client(config.server, config.botName, {
 
 bot.addListener('message', function (from, to, message) {
 
-    ft_regex="[0-9]+\s?f[e]{0,2}t";
+    ft_regex="[0-9]+[ ]*f[e]{0,2}t";
     if(message.search(ft_regex) != -1) { // ft/feet
         console.log("Detected feet at "+message.search(ft_regex));
         sillyNum=message.substr(message.search(ft_regex),12).match("[0-9]+");
