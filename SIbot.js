@@ -21,11 +21,11 @@ bot.addListener('message', function (from, to, message) {
         realNum=parseInt(sillyNum)*0.3048;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<10) {
-            realNum = realNum.toFixed(2);
+            outStr="In real units: "+sillyNum+" ft = "+realNum.toFixed(2)+" m";
         } else {
-            realNum = Math.round(realNum);
+            outStr="In real units: "+sillyNum+" ft = "+Math.round(realNum)+" m";
         }
-        bot.say(config.channels[0], "In real units: "+sillyNum+" ft = "+realNum+" m");
+        bot.say(config.channels[0], outStr);
     }
 });
 
