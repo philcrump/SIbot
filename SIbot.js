@@ -20,7 +20,7 @@ bot.addListener('message', function (from, to, message) {
 function feet_parse(message, to) {
     ft_regex="[0-9]*[, ]?[0-9]+[ ]*f[e]{0,2}t";
     if(message.search(ft_regex) != -1) {
-        console.log("Detected feet at "+message.search(ft_regex));
+        console.log(new Date()+": Detected feet at "+message.search(ft_regex));
         sillyNum=message.substr(message.search(ft_regex),12).match("[0-9]*[, ]?[0-9]+");
         realNum=parseInt(String(sillyNum).replace(",",""))*0.3048;
         console.log(" - Got Number as "+sillyNum);
