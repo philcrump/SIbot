@@ -20,7 +20,7 @@ bot.addListener('message', function (from, to, message) {
         sillyNum=message.substr(message.search(ft_regex),12).match("[0-9]+");
         realNum=parseInt(sillyNum)*0.3048;
         console.log(" - Got Number as "+sillyNum);
-        bot.say(config.channels[0], "In real units: "+sillyNum+"ft = "+realNum+"m");
+        bot.say(config.channels[0], "In real units: "+sillyNum+"ft = "+realNum.toFixed(2)+"m");
     }
 });
 
