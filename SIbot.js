@@ -8,12 +8,9 @@ var config = {
 };
 
 var irc = require("irc");
-var bot = new irc.Client(config.server, config.botName, {
-        channels: config.channels
-});
+var bot = new irc.Client(config.server, config.botName, { channels: config.channels });
 
 bot.addListener('message', function (from, to, message) {
-
     ft_regex="[0-9]*[, ]?[0-9]+[ ]*f[e]{0,2}t";
     if(message.search(ft_regex) != -1) { // ft/feet
         console.log("Detected feet at "+message.search(ft_regex));
