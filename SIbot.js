@@ -23,7 +23,7 @@ bot.addListener('message', function (from, to, message) {
         if(realNum<10) {
             realNum = realNum.toFixed(2);
         } else {
-            realNum = round(realNum);
+            realNum = Math.round(realNum);
         }
         bot.say(config.channels[0], "In real units: "+sillyNum+" ft = "+realNum+" m");
     }
