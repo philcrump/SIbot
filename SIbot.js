@@ -24,7 +24,7 @@ bot.addListener('message', function (from, to, message) {
         } else {
             outStr="In real units: "+sillyNum+" ft = "+Math.round(realNum)+" m";
         }
-        bot.say(config.channels[0], outStr);
+        bot.say(to, outStr);
     }
 });
 
