@@ -15,7 +15,7 @@ bot.addListener('message', function (from, to, message) {
     if(message.search(ft_regex) != -1) { // ft/feet
         console.log("Detected feet at "+message.search(ft_regex));
         sillyNum=message.substr(message.search(ft_regex),12).match("[0-9]*[, ]?[0-9]+");
-        realNum=parseInt(sillyNum.replace(",",""))*0.3048;
+        realNum=parseInt(String(sillyNum).replace(",",""))*0.3048;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<10) {
             outStr="In real units: "+sillyNum+" ft = "+realNum.toFixed(2)+" m";
