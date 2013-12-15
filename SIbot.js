@@ -1,4 +1,4 @@
-console.log("SIBot v0.1");
+console.log("SIBot v0.2");
 console.log("Loading...");
 
 var config = {
@@ -16,6 +16,7 @@ bot.addListener('message', function (from, to, message) {
     
     feet_parse(message, to); // ft / feet
     pounds_parse(message, to); // lb / lbs
+    //fahrenheit_parse(message, to); // Fahrenheit
 });
 
 function feet_parse(message, to) {
@@ -48,6 +49,18 @@ function pounds_parse(message, to) {
         } else {
             outStr="In real units: "+sillyNum+" lbs = "+realNum.toFixed(1)+" kg";
         }
+        bot.say(to, outStr);
+    }
+}
+
+function fahrenheit_parse(message, to) {
+    df_regex="[0-9]*[,]?[.]?[0-9]+([ ]|[°])+F[\W]+";
+    if(message.search(df_regex) != -1) {
+        console.log(new Date()+": Detected fahrenheit at "+message.search(df_regex));
+        sillyNum=message.substr(message.search(df_regex),12).match("[0-9]*[,]?[.]?[0-9]+");
+        realNum=(parseInt(String(sillyNum).replace(",",""))-32)*(5/9);
+        console.log(" - Got Number as "+sillyNum);
+        outStr="In real units: "+sillyNum+" °F = "+realNum.toFixed(1)+" °C";
         bot.say(to, outStr);
     }
 }
