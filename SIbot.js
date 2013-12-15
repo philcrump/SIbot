@@ -15,6 +15,7 @@ bot.addListener('message', function (from, to, message) {
     // (more than one conversion can be output per input message)
     
     feet_parse(message, to); // ft / feet
+    pounds_parse(message, to); // lb / lbs
 });
 
 function feet_parse(message, to) {
@@ -34,5 +35,22 @@ function feet_parse(message, to) {
         bot.say(to, outStr);
     }
 }
+
+function pounds_parse(message, to) {
+    lb_regex="[0-9]*[,]?[.]?[0-9]+[ ]*lb";
+    if(message.search(lb_regex) != -1) {
+        console.log(new Date()+": Detected pounds at "+message.search(lb_regex));
+        sillyNum=message.substr(message.search(lb_regex),12).match("[0-9]*[,]?[.]?[0-9]+");
+        realNum=parseInt(String(sillyNum).replace(",",""))*0.453592;
+        console.log(" - Got Number as "+sillyNum);
+        if(realNum<1) {
+            outStr="In real units: "+sillyNum+" lbs = "+Math.round(realNum*1000)+" g";
+        } else {
+            outStr="In real units: "+sillyNum+" lbs = "+realNum.toFixed(1)+" kg";
+        }
+        bot.say(to, outStr);
+    }
+}
+
 
 console.log("Loaded.");
