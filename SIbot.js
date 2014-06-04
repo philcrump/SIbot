@@ -2,7 +2,7 @@ console.log("SIBot v0.2");
 console.log("Loading...");
 
 var config = {
-        channels: ["#sibot-test"],
+        channels: ["#highaltitude"],
         server: "chat.freenode.net",
         botName: "SIbot"
 };
