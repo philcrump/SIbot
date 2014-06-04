@@ -24,7 +24,7 @@ function feet_parse(message, to) {
     if(message.search(ft_regex) != -1) {
         console.log(new Date()+": Detected feet at "+message.search(ft_regex));
         sillyNum=message.substr(message.search(ft_regex),12).match("[0-9]*[,]?[0-9]+");
-        realNum=parseInt(String(sillyNum).replace(",",""))*0.3048;
+        realNum=parseFloat(String(sillyNum).replace(",",""))*0.3048;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<10) {
             outStr="In real units: "+sillyNum+" ft = "+realNum.toFixed(2)+" m";
@@ -42,7 +42,7 @@ function pounds_parse(message, to) {
     if(message.search(lb_regex) != -1) {
         console.log(new Date()+": Detected pounds at "+message.search(lb_regex));
         sillyNum=message.substr(message.search(lb_regex),12).match("[0-9]*[,]?[.]?[0-9]+");
-        realNum=parseInt(String(sillyNum).replace(",",""))*0.453592;
+        realNum=parseFloat(String(sillyNum).replace(",",""))*0.453592;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<1) {
             outStr="In real units: "+sillyNum+" lbs = "+Math.round(realNum*1000)+" g";
@@ -58,7 +58,7 @@ function fahrenheit_parse(message, to) {
     if(message.search(df_regex) != -1) {
         console.log(new Date()+": Detected fahrenheit at "+message.search(df_regex));
         sillyNum=message.substr(message.search(df_regex),12).match("[0-9]*[,]?[.]?[0-9]+");
-        realNum=(parseInt(String(sillyNum).replace(",",""))-32)*(5/9);
+        realNum=(parseFloat(String(sillyNum).replace(",",""))-32)*(5/9);
         console.log(" - Got Number as "+sillyNum);
         outStr="In real units: "+sillyNum+" °F = "+realNum.toFixed(1)+" °C";
         bot.say(to, outStr);
