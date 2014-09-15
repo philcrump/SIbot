@@ -1,4 +1,7 @@
-console.log("SIBot v0.2");
+var exec = require('child_process').exec;
+var irc = require("irc");
+
+console.log("SIBot v0.3");
 console.log("Loading...");
 
 var config = {
@@ -7,63 +10,190 @@ var config = {
         botName: "SIbot"
 };
 
-var irc = require("irc");
-var bot = new irc.Client(config.server, config.botName, { channels: config.channels });
+var units_to_SI = {};
 
-bot.addListener('message', function (from, to, message) {
-    // List of parser functions
-    // (more than one conversion can be output per input message)
-    
-    feet_parse(message, to); // ft / feet
-    pounds_parse(message, to); // lb / lbs
-    //fahrenheit_parse(message, to); // Fahrenheit
-});
+// length
+units_to_SI['thou']				= 'mm';
+units_to_SI['inches']			= 'mm';
+units_to_SI['inch']				= 'mm';
+units_to_SI['in']				= 'mm';
+units_to_SI['"']				= 'mm';
+units_to_SI['foot']				= 'metre';
+units_to_SI['feet']				= 'metre';
+units_to_SI['ft']				= 'metre';
+units_to_SI['\'']				= 'metre';
+units_to_SI['yards']			= 'metre';
+units_to_SI['yard']				= 'metre';
+units_to_SI['yd']				= 'metre';
+units_to_SI['chains']			= 'metre';
+units_to_SI['chain']			= 'metre';
+units_to_SI['ch']				= 'metre';
+units_to_SI['furlongs']			= 'metre';
+units_to_SI['furlong']			= 'metre';
+units_to_SI['fur']				= 'metre';
+units_to_SI['miles']			= 'kilometre';
+units_to_SI['mile']				= 'kilometre';
+units_to_SI['mi']				= 'kilometre';
+units_to_SI['leagues']			= 'kilometre';
+units_to_SI['league']			= 'kilometre';
+units_to_SI['lea']				= 'kilometre';
+units_to_SI['fathoms']			= 'metre';
+units_to_SI['fathom']			= 'metre';
+units_to_SI['ftm']				= 'metre';
+units_to_SI['cables']			= 'metre';
+units_to_SI['cable']			= 'metre';
+units_to_SI['nautical mile']	= 'kilometre';
+units_to_SI['links']			= 'metre';
+units_to_SI['link']				= 'metre';
+units_to_SI['rods']				= 'metre';
+units_to_SI['rod']				= 'metre';
+units_to_SI['furlogs']			= 'metre';
+units_to_SI['furlog']			= 'metre';
+units_to_SI['ly']		    	= 'metre';
 
-function feet_parse(message, to) {
-    ft_regex="[0-9]*[,]?[0-9]*[.]?[0-9]*[ ]?f[e]{0,2}t";
-    if(message.search(ft_regex) != -1) {
-        console.log(new Date()+": Detected feet at "+message.search(ft_regex));
-        sillyNum=message.substr(message.search(ft_regex),12).match("[0-9]*[,]?[0-9]+");
-        realNum=parseFloat(String(sillyNum).replace(",",""))*0.3048;
-        console.log(" - Got Number as "+sillyNum);
-        if(realNum<10) {
-            outStr="In real units: "+sillyNum+" ft = "+realNum.toFixed(2)+" m";
-        } else if(realNum>5000) {
-            outStr="In real units: "+sillyNum+" ft = "+Math.round(realNum/1000)+" km";
-        } else {
-            outStr="In real units: "+sillyNum+" ft = "+Math.round(realNum)+" m";
+// time
+units_to_SI['fortnights']		= 'week';
+units_to_SI['fortnight']		= 'week';
+
+// volume
+units_to_SI['fluid ounce']      = 'ml';
+units_to_SI['fl oz']            = 'ml';
+units_to_SI['floz']             = 'ml';
+units_to_SI['gills']            = 'ml';
+units_to_SI['gill']             = 'ml';
+units_to_SI['gi']               = 'ml';
+units_to_SI['pints']            = 'ml';
+units_to_SI['pint']             = 'ml';
+units_to_SI['pt']               = 'ml';
+units_to_SI['quarts']           = 'ml';
+units_to_SI['quart']            = 'ml';
+units_to_SI['qt']               = 'ml';
+units_to_SI['gallons']          = 'ml';
+units_to_SI['gallon']           = 'ml';
+units_to_SI['gal']              = 'ml';
+
+// mass & weight
+
+units_to_SI['grains']           = 'gram';
+units_to_SI['grain']            = 'gram';
+units_to_SI['gr']               = 'gram';
+units_to_SI['drams']            = 'gram';
+units_to_SI['dram']             = 'gram';
+units_to_SI['dr']               = 'gram';
+units_to_SI['ounces']           = 'gram';
+units_to_SI['ounce']            = 'gram';
+units_to_SI['oz']               = 'gram';
+units_to_SI['pounds']           = 'kg';
+units_to_SI['pound']            = 'kg';
+units_to_SI['lb']               = 'kg';
+units_to_SI['stones']           = 'kg';
+units_to_SI['stone']            = 'kg';
+units_to_SI['st']               = 'kg';
+units_to_SI['quarters']         = 'kg';
+units_to_SI['quarter']          = 'kg';
+units_to_SI['qr']               = 'kg';
+units_to_SI['hundredweight']    = 'kg';
+units_to_SI['cwt']              = 'kg';
+units_to_SI['tons']             = 'kg';
+units_to_SI['ton']              = 'kg';
+units_to_SI['firkins']          = 'kg';
+units_to_SI['firkin']           = 'kg';
+units_to_SI['fir']              = 'kg';
+
+
+var baseRegex = '([0-9,]+(\\.[0-9]+)?) ?(({UNITS})( ?/ ?([a-z]+))?)';
+var rudeRegex = new RegExp(baseRegex.replace(/\{UNITS\}/g, Object.keys(units_to_SI).join("|")), 'gi');
+
+function escapeShellArg(arg) {
+    return "'" + arg.replace(/\'/g, "'\\''") + "'";
+}
+
+var bot = new irc.Client(config.server, config.botName, { channels: config.channels, debug: true});
+
+var response_step =  function (from, to, message, step) {
+    if(to[0] != '#') return;
+    step = (typeof step != 'number') ? 0 : step;
+
+    // if we are doing a 5th conversion, just point a finger at the guy
+    if(step >= 3) {
+        bot.say(to, "good god man!");
+        return;
+    }
+
+    // test the message to see if we can be rude to this person
+    var result = rudeRegex.exec(message);
+
+    if(result == null) return;
+
+    // reset string start index
+    rudeRegex.lastIndex = 0
+
+    // lets prepare to be rude with maximum percision
+    if(step == 0) {
+        console.log(to, '<' + from + '>', message);
+        logged = true;
+    }
+
+
+    // deny the pleasure of clever people typing nonsense
+    var inputVal = result[1].replace(/,/g,'');
+    if(inputVal.length == 0 || isNaN(parseFloat(inputVal)) || parseFloat(inputVal) <= 0) return;
+
+    var input = result[0].replace(/,/g,'');
+    var unit = result[4].toLowerCase();
+
+    // convert ' " shorthand into a word
+    if(unit == '"') input = input.replace('"','inch');
+    if(unit == "'") input = input.replace("'",'foot');
+
+    var output = units_to_SI[unit];
+    var per = null;
+
+    // handle m/s etc
+    if(result[6] != undefined) {
+        per = units_to_SI[result[6].toLowerCase()];
+        if(per == undefined) per = result[6];
+        output += "/" + per;
+    }
+
+    // remove the already matched silly unit from the message, so we don't repeat ourself
+    while(message.indexOf(result[0]) > -1) message = message.replace(result[0],'xxx');
+
+    // conversion is done via `units` program
+    var cmd = 'units ' + escapeShellArg(input) + ' ' + escapeShellArg(output);
+
+    exec(cmd, function(error, stdout, stderr) {
+        var lines = stdout.split("\n");
+
+        // if we encounter error, make a record and don't respond
+        if(lines.length < 2 || lines[0].indexOf("error") > -1) {
+            console.error("[ERROR] Input: " + message);
+            console.error("[ERROR] Unable to convert. See output of `units`:");
+            console.error(stdout);
         }
-        bot.say(to, outStr);
-    }
-}
+        else {
+            // pluralize the output unit in certain sutations
+            var valueStr = (lines[0].indexOf("*") > -1) ? lines[0] : lines[1];
+            valueStr = valueStr.trim().replace(/^\* /,'');
 
-function pounds_parse(message, to) {
-    lb_regex="[0-9]*[,]?[.]?[0-9]+[ ]*lb";
-    if(message.search(lb_regex) != -1) {
-        console.log(new Date()+": Detected pounds at "+message.search(lb_regex));
-        sillyNum=message.substr(message.search(lb_regex),12).match("[0-9]*[,]?[.]?[0-9]+");
-        realNum=parseFloat(String(sillyNum).replace(",",""))*0.453592;
-        console.log(" - Got Number as "+sillyNum);
-        if(realNum<1) {
-            outStr="In real units: "+sillyNum+" lbs = "+Math.round(realNum*1000)+" g";
-        } else {
-            outStr="In real units: "+sillyNum+" lbs = "+realNum.toFixed(1)+" kg";
+            if(parseFloat(valueStr) >= 2 && per == null && output.length > 2) output += 's';
+
+            // finally be rude by responding
+            var msg = [ "In real units:",
+                        input,
+                        "=",
+                        valueStr,
+                        output
+                      ].join(" ");
+
+            console.log(to, '<' + config.botName + '>', msg);
+            bot.say(to, msg);
         }
-        bot.say(to, outStr);
-    }
+
+        response_step(from, to, message, ++step);
+    });
 }
 
-function fahrenheit_parse(message, to) {
-    df_regex="[0-9]*[,]?[.]?[0-9]+([ ]|[°])+F[\W]+";
-    if(message.search(df_regex) != -1) {
-        console.log(new Date()+": Detected fahrenheit at "+message.search(df_regex));
-        sillyNum=message.substr(message.search(df_regex),12).match("[0-9]*[,]?[.]?[0-9]+");
-        realNum=(parseFloat(String(sillyNum).replace(",",""))-32)*(5/9);
-        console.log(" - Got Number as "+sillyNum);
-        outStr="In real units: "+sillyNum+" °F = "+realNum.toFixed(1)+" °C";
-        bot.say(to, outStr);
-    }
-}
-
+bot.addListener('message', response_step);
 
 console.log("Loaded.");

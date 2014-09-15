@@ -1,0 +1,23 @@
+{
+    "name": "SIbot",
+    "version": "0.3.0",
+    "description": "A rude bot that reminds you to use SI units",
+    "author": "Phil Crump <phildcrump@gmail.com>",
+    "contributors": [
+        "Rossen Popov <zx.phone@gmail.com>"
+    ],
+    "main": "./SIbot",
+    "repository": {
+        "type":"git",
+        "url":"https://github.com/rossengeorgiev/SIbot.git"
+    },
+    "engines": {
+        "node": ">=0.4.0"
+    },
+    "dependencies": {
+        "irc": ">=0.3.7"
+    },
+    "scripts": {
+        "install": "sudo apt-get install units"
+    }
+}
