@@ -1,6 +1,6 @@
 {
     "name": "SIbot",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "description": "A rude bot that reminds you to use SI units",
     "author": "Phil Crump <phildcrump@gmail.com>",
     "contributors": [

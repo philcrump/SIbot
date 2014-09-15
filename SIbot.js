@@ -1,7 +1,7 @@
 var exec = require('child_process').exec;
 var irc = require("irc");
 
-console.log("SIBot v0.3");
+console.log("SIBot v0.4");
 console.log("Loading...");
 
 var config = {
@@ -101,7 +101,7 @@ units_to_SI['firkin']           = 'kg';
 units_to_SI['fir']              = 'kg';
 
 
-var baseRegex = '([0-9,]+(\\.[0-9]+)?) ?(({UNITS})( ?/ ?([a-z]+))?)';
+var baseRegex = '(^| )(([0-9,]+(\\.[0-9]+)?) ?(({UNITS})( ?/ ?([a-z]+))?))($| )';
 var rudeRegex = new RegExp(baseRegex.replace(/\{UNITS\}/g, Object.keys(units_to_SI).join("|")), 'gi');
 
 function escapeShellArg(arg) {
@@ -136,11 +136,11 @@ var response_step =  function (from, to, message, step) {
 
 
     // deny the pleasure of clever people typing nonsense
-    var inputVal = result[1].replace(/,/g,'');
+    var inputVal = result[3].replace(/,/g,'');
     if(inputVal.length == 0 || isNaN(parseFloat(inputVal)) || parseFloat(inputVal) <= 0) return;
 
-    var input = result[0].replace(/,/g,'');
-    var unit = result[4].toLowerCase();
+    var input = result[2].replace(/,/g,'');
+    var unit = result[6].toLowerCase();
 
     // convert ' " shorthand into a word
     if(unit == '"') input = input.replace('"','inch');
@@ -150,14 +150,14 @@ var response_step =  function (from, to, message, step) {
     var per = null;
 
     // handle m/s etc
-    if(result[6] != undefined) {
-        per = units_to_SI[result[6].toLowerCase()];
-        if(per == undefined) per = result[6];
+    if(result[8] != undefined) {
+        per = units_to_SI[result[8].toLowerCase()];
+        if(per == undefined) per = result[8];
         output += "/" + per;
     }
 
     // remove the already matched silly unit from the message, so we don't repeat ourself
-    while(message.indexOf(result[0]) > -1) message = message.replace(result[0],'xxx');
+    while(message.indexOf(result[2]) > -1) message = message.replace(result[2],'xxx');
 
     // conversion is done via `units` program
     var cmd = 'units ' + escapeShellArg(input) + ' ' + escapeShellArg(output);
@@ -166,7 +166,7 @@ var response_step =  function (from, to, message, step) {
         var lines = stdout.split("\n");
 
         // if we encounter error, make a record and don't respond
-        if(lines.length < 2 || lines[0].indexOf("error") > -1) {
+        if(lines.length < 3 || lines[0].indexOf("error") > -1) {
             console.error("[ERROR] Input: " + message);
             console.error("[ERROR] Unable to convert. See output of `units`:");
             console.error(stdout);
