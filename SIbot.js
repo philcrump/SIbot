@@ -11,6 +11,9 @@ var irc = require("irc");
 var bot = new irc.Client(config.server, config.botName, { channels: config.channels });
 
 bot.addListener('message', function (from, to, message) {
+    // remove color codes from the message
+    message = message.replace(/[\x02\x1F\x0F\x16]|\x03(\d\d?(,\d\d?)?)?/g,'');
+    
     // List of parser functions
     // (more than one conversion can be output per input message)
     
