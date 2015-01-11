@@ -4,7 +4,7 @@ console.log("Loading...");
 var config = {
         channels: ["#highaltitude"],
         server: "chat.freenode.net",
-        botName: "theRealSIbot"
+        botName: "SIbot"
 };
 
 var irc = require("irc");
@@ -31,8 +31,8 @@ function feet_parse(message, to) {
         console.log(" - Got Number as "+sillyNum);
         if(realNum<10) {
             outStr="In real units: "+sillyNum+" ft = "+realNum.toFixed(2)+" m";
-        } else if(realNum>5000) {
-            outStr="In real units: "+sillyNum+" ft = "+Math.round(realNum/1000)+" km";
+        } else if(realNum>15000) {
+            outStr="In real units: "+sillyNum+" ft = "+(Math.round(realNum/100)/10) +" km";
         } else {
             outStr="In real units: "+sillyNum+" ft = "+Math.round(realNum)+" m";
         }
