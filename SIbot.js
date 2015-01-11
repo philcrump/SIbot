@@ -4,7 +4,7 @@ console.log("Loading...");
 var config = {
         channels: ["#highaltitude"],
         server: "chat.freenode.net",
-        botName: "SIbot"
+        botName: "theRealSIbot"
 };
 
 var irc = require("irc");
