@@ -10,9 +10,11 @@ var config = {
 var irc = require("irc");
 var bot = new irc.Client(config.server, config.botName, { channels: config.channels });
 
+const colourCode_regex = /[\x02\x1F\x0F\x16]|\x03(\d\d?(,\d\d?)?)?/g;
+
 bot.addListener('message', function (from, to, message) {
     // remove color codes from the message
-    message = message.replace(/[\x02\x1F\x0F\x16]|\x03(\d\d?(,\d\d?)?)?/g,'');
+    message = message.replace(colourCode_regex,'');
     
     // List of parser functions
     // (more than one conversion can be output per input message)
