@@ -33,8 +33,13 @@ const num_regex = /[0-9]*[.,]?[0-9]+/;
 function feet_parse(message, to) {
     if(message.search(ft_regex) != -1) {
         console.log(new Date()+": Detected feet at "+message.search(ft_regex));
-        sillyNum=message.substr(message.search(ft_regex),12).match(num_regex);
-        realNum=parseFloat(String(sillyNum).replace(",","."))*0.3048;
+        sillyNum = String(message.substr(message.search(ft_regex),12).match(num_regex));
+	if(sillyNum.includes(','))
+	{
+		/* Comma is decimal  point */
+		sillyNum = sillyNum.replace(",",".");
+	}
+        realNum=parseFloat(sillyNum)*0.3048;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<10) {
             outStr="In real units: "+sillyNum+" feet = "+realNum.toFixed(2)+" m";
@@ -50,8 +55,13 @@ function feet_parse(message, to) {
 function inch_parse(message, to) {
     if(message.search(in_regex) != -1) {
         console.log(new Date()+": Detected inch at "+message.search(in_regex));
-        sillyNum=message.substr(message.search(in_regex),12).match(num_regex);
-        realNum=parseFloat(String(sillyNum).replace(",","."))*2.54;
+        sillyNum = String(message.substr(message.search(in_regex),12).match(num_regex));
+	if(sillyNum.includes(','))
+	{
+		/* Comma is decimal  point */
+		sillyNum = sillyNum.replace(",",".");
+	}
+        realNum=parseFloat(sillyNum)*2.54;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<50) {
             outStr="In real units: "+sillyNum+" inches = "+realNum.toFixed(2)+" cm";
@@ -67,8 +77,13 @@ function inch_parse(message, to) {
 function pounds_parse(message, to) {
     if(message.search(lb_regex) != -1) {
         console.log(new Date()+": Detected pounds at "+message.search(lb_regex));
-        sillyNum=message.substr(message.search(lb_regex),12).match(num_regex);
-        realNum=parseFloat(String(sillyNum).replace(",","."))*0.453592;
+        sillyNum = String(message.substr(message.search(lb_regex),12).match(num_regex));
+	if(sillyNum.includes(','))
+	{
+		/* Comma is decimal  point */
+		sillyNum = sillyNum.replace(",",".");
+	}
+        realNum=parseFloat(sillyNum)*0.453592;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<1) {
             outStr="In real units: "+sillyNum+" lbs = "+Math.round(realNum*1000)+" g";
