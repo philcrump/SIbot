@@ -23,11 +23,11 @@ bot.addListener('message', function (from, to, message) {
 });
 
 function feet_parse(message, to) {
-    ft_regex="(?<![\w\/])[0-9]*[,]?[0-9]+[ ]*(\'|f[e]{0,2}t)(?!\w)";
+    ft_regex="(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*(\'|f[e]{0,2}t)(?!\w)";
     if(message.search(ft_regex) != -1) {
         console.log(new Date()+": Detected feet at "+message.search(ft_regex));
-        sillyNum=message.substr(message.search(ft_regex),12).match("[0-9]*[,]?[0-9]+");
-        realNum=parseFloat(String(sillyNum).replace(",",""))*0.3048;
+        sillyNum=message.substr(message.search(ft_regex),12).match("[0-9]*[.,]?[0-9]+");
+        realNum=parseFloat(String(sillyNum).replace(",","."))*0.3048;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<10) {
             outStr="In real units: "+sillyNum+" feet = "+realNum.toFixed(2)+" m";
@@ -41,11 +41,11 @@ function feet_parse(message, to) {
 }
 
 function inch_parse(message, to) {
-    in_regex="(?<![\w\/])[0-9]*[,]?[0-9]+[ ]*(\"|in|inch)(es)?(?!\w)";
+    in_regex="(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*(\"|in|inch)(es)?(?!\w)";
     if(message.search(in_regex) != -1) {
         console.log(new Date()+": Detected inch at "+message.search(in_regex));
-        sillyNum=message.substr(message.search(in_regex),12).match("[0-9]*[,]?[0-9]+");
-        realNum=parseFloat(String(sillyNum).replace(",",""))*2.54;
+        sillyNum=message.substr(message.search(in_regex),12).match("[0-9]*[.,]?[0-9]+");
+        realNum=parseFloat(String(sillyNum).replace(",","."))*2.54;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<50) {
             outStr="In real units: "+sillyNum+" inches = "+realNum.toFixed(2)+" cm";
@@ -59,11 +59,11 @@ function inch_parse(message, to) {
 }
 
 function pounds_parse(message, to) {
-    lb_regex="(?<![\w\/])[0-9]*[,]?[.]?[0-9]+[ ]*lb(?!\w)";
+    lb_regex="(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*lb(?!\w)";
     if(message.search(lb_regex) != -1) {
         console.log(new Date()+": Detected pounds at "+message.search(lb_regex));
-        sillyNum=message.substr(message.search(lb_regex),12).match("[0-9]*[,]?[.]?[0-9]+");
-        realNum=parseFloat(String(sillyNum).replace(",",""))*0.453592;
+        sillyNum=message.substr(message.search(lb_regex),12).match("[0-9]*[.,]?[0-9]+");
+        realNum=parseFloat(String(sillyNum).replace(",","."))*0.453592;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<1) {
             outStr="In real units: "+sillyNum+" lbs = "+Math.round(realNum*1000)+" g";
