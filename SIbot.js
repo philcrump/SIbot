@@ -24,8 +24,8 @@ bot.addListener('message', function (from, to, message) {
     pounds_parse(message, to); // lb / lbs
 });
 
-const ft_regex = /(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*(\'|f[e]{0,2}t)(?!\w)/;
-const in_regex = /(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*(\"|inch)(es)?(?!\w)/;
+const ft_regex = /(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*f[e]{0,2}t(?!\w)/;
+const in_regex = /(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*inch(es)?(?!\w)/;
 const lb_regex = /(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*lb(s)?(?!\w)/;
 
 const num_regex = /[0-9]*[.,]?[0-9]+/;
