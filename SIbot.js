@@ -32,7 +32,7 @@ const num_regex = /[0-9]*[.,]?[0-9]+/;
 
 function feet_parse(message, to) {
     if(message.search(ft_regex) != -1) {
-        console.log(new Date()+": Detected feet at "+message.search(ft_regex));
+        //console.log(new Date()+": Detected feet at "+message.search(ft_regex));
         sillyNum = String(message.substr(message.search(ft_regex),12).match(num_regex));
 	if(sillyNum.includes(','))
 	{
@@ -40,7 +40,7 @@ function feet_parse(message, to) {
 		sillyNum = sillyNum.replace(",",".");
 	}
         realNum=parseFloat(sillyNum)*0.3048;
-        console.log(" - Got Number as "+sillyNum);
+        //console.log(" - Got Number as "+sillyNum);
         if(realNum<10) {
             outStr="In real units: "+sillyNum+" feet = "+realNum.toFixed(2)+" m";
         } else if(realNum>15000) {
@@ -54,7 +54,7 @@ function feet_parse(message, to) {
 
 function inch_parse(message, to) {
     if(message.search(in_regex) != -1) {
-        console.log(new Date()+": Detected inch at "+message.search(in_regex));
+        //console.log(new Date()+": Detected inch at "+message.search(in_regex));
         sillyNum = String(message.substr(message.search(in_regex),12).match(num_regex));
 	if(sillyNum.includes(','))
 	{
@@ -62,7 +62,7 @@ function inch_parse(message, to) {
 		sillyNum = sillyNum.replace(",",".");
 	}
         realNum=parseFloat(sillyNum)*2.54;
-        console.log(" - Got Number as "+sillyNum);
+        //console.log(" - Got Number as "+sillyNum);
         if(realNum<50) {
             outStr="In real units: "+sillyNum+" inches = "+realNum.toFixed(2)+" cm";
         } else if(realNum<2000) {
@@ -76,7 +76,7 @@ function inch_parse(message, to) {
 
 function pounds_parse(message, to) {
     if(message.search(lb_regex) != -1) {
-        console.log(new Date()+": Detected pounds at "+message.search(lb_regex));
+        //console.log(new Date()+": Detected pounds at "+message.search(lb_regex));
         sillyNum = String(message.substr(message.search(lb_regex),12).match(num_regex));
 	if(sillyNum.includes(','))
 	{
@@ -84,7 +84,7 @@ function pounds_parse(message, to) {
 		sillyNum = sillyNum.replace(",",".");
 	}
         realNum=parseFloat(sillyNum)*0.453592;
-        console.log(" - Got Number as "+sillyNum);
+        //console.log(" - Got Number as "+sillyNum);
         if(realNum<1) {
             outStr="In real units: "+sillyNum+" lbs = "+Math.round(realNum*1000)+" g";
         } else {
