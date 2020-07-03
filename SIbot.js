@@ -41,7 +41,7 @@ function feet_parse(message, to) {
 }
 
 function inch_parse(message, to) {
-    in_regex="(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*(\"|in|inch)(es)?(?!\w)";
+    in_regex="(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*(\"|inch)(es)?(?!\w)";
     if(message.search(in_regex) != -1) {
         console.log(new Date()+": Detected inch at "+message.search(in_regex));
         sillyNum=message.substr(message.search(in_regex),12).match("[0-9]*[.,]?[0-9]+");
