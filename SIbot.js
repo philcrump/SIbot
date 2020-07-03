@@ -22,11 +22,16 @@ bot.addListener('message', function (from, to, message) {
     pounds_parse(message, to); // lb / lbs
 });
 
+const ft_regex = /(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*(\'|f[e]{0,2}t)(?!\w)/;
+const in_regex = /(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*(\"|inch)(es)?(?!\w)/;
+const lb_regex = /(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*lb(?!\w)/;
+
+const num_regex = /[0-9]*[.,]?[0-9]+/;
+
 function feet_parse(message, to) {
-    ft_regex="(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*(\'|f[e]{0,2}t)(?!\w)";
     if(message.search(ft_regex) != -1) {
         console.log(new Date()+": Detected feet at "+message.search(ft_regex));
-        sillyNum=message.substr(message.search(ft_regex),12).match("[0-9]*[.,]?[0-9]+");
+        sillyNum=message.substr(message.search(ft_regex),12).match(num_regex);
         realNum=parseFloat(String(sillyNum).replace(",","."))*0.3048;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<10) {
@@ -41,10 +46,9 @@ function feet_parse(message, to) {
 }
 
 function inch_parse(message, to) {
-    in_regex="(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*(\"|inch)(es)?(?!\w)";
     if(message.search(in_regex) != -1) {
         console.log(new Date()+": Detected inch at "+message.search(in_regex));
-        sillyNum=message.substr(message.search(in_regex),12).match("[0-9]*[.,]?[0-9]+");
+        sillyNum=message.substr(message.search(in_regex),12).match(num_regex);
         realNum=parseFloat(String(sillyNum).replace(",","."))*2.54;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<50) {
@@ -59,10 +63,9 @@ function inch_parse(message, to) {
 }
 
 function pounds_parse(message, to) {
-    lb_regex="(?<![\w\/])[0-9]*[.,]?[0-9]+[ ]*lb(?!\w)";
     if(message.search(lb_regex) != -1) {
         console.log(new Date()+": Detected pounds at "+message.search(lb_regex));
-        sillyNum=message.substr(message.search(lb_regex),12).match("[0-9]*[.,]?[0-9]+");
+        sillyNum=message.substr(message.search(lb_regex),12).match(num_regex);
         realNum=parseFloat(String(sillyNum).replace(",","."))*0.453592;
         console.log(" - Got Number as "+sillyNum);
         if(realNum<1) {
